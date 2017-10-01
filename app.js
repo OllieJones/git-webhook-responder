@@ -9,14 +9,14 @@ global.serverConfig = settings.ServerConfig;
 var express          = require( 'express' );
 var path             = require( 'path' );
 var favicon          = require( 'serve-favicon' );
-var logger           = require( './lib/logger.js' )( settings );
+var logger           = require( './lib/logger' )( settings );
 global.logger        = logger;
 var morgan           = require( 'morgan' );
 var cookieParser     = require( 'cookie-parser' );
 var bodyParser       = require( 'body-parser' );
 const lessMiddleware = require( 'less-middleware' );
 var index            = require( './routes/index' );
-var users            = require( './routes/users' );
+var webhook          = require( './routes/webhook' );
 
 var app = express();
 
@@ -46,8 +46,11 @@ app.use( cookieParser() );
 app.use( lessMiddleware( path.join( __dirname, 'public' ) ) );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
+app.use( require( './lib/gitlab' ) );
+app.use( require( './lib/github' ) );
+
 app.use( '/', index );
-app.use( '/users', users );
+app.use( '/webhook', webhook );
 
 // catch 404 and forward to error handler
 app.use( function( req, res, next ) {
