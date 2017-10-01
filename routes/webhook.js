@@ -7,7 +7,7 @@ var router = express.Router();
 /* webhook POST endpoint */
 router.post( '/', function( req, res, next ) {
 
-  if( req.description.ok ) {
+  if( req.description && req.description.ok ) {
     /* do something useful */
   }
 
