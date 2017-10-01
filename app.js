@@ -6,17 +6,17 @@ const properties = require( 'properties' );
 var settings        = config.get( 'webhook' );
 global.serverConfig = settings.ServerConfig;
 
-var express      = require( 'express' );
-var path         = require( 'path' );
-var favicon      = require( 'serve-favicon' );
-var logger       = require( './lib/logger.js' )( settings );
-global.logger    = logger;
-var morgan       = require( 'morgan' );
-var cookieParser = require( 'cookie-parser' );
-var bodyParser   = require( 'body-parser' );
-
-var index = require( './routes/index' );
-var users = require( './routes/users' );
+var express          = require( 'express' );
+var path             = require( 'path' );
+var favicon          = require( 'serve-favicon' );
+var logger           = require( './lib/logger.js' )( settings );
+global.logger        = logger;
+var morgan           = require( 'morgan' );
+var cookieParser     = require( 'cookie-parser' );
+var bodyParser       = require( 'body-parser' );
+const lessMiddleware = require( 'less-middleware' );
+var index            = require( './routes/index' );
+var users            = require( './routes/users' );
 
 var app = express();
 
@@ -43,6 +43,7 @@ app.use( morgan(
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {extended: false} ) );
 app.use( cookieParser() );
+app.use( lessMiddleware( path.join( __dirname, 'public' ) ) );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
 app.use( '/', index );
