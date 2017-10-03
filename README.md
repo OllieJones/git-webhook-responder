@@ -53,13 +53,18 @@ The repository's URL. For example `git@github.com/olliejones/git-webhook-respond
 The action triggering the webhook.  `push`, `merge`, etc.
 
     branch
-The branch of the repository involved in the action. 
+The branch of the repository involved in the action.  Branch names appearing here 
+are [fully qualified git references](https://git-scm.com/book/en/v2/Git-Internals-Git-References) looking like this:
+ `refs/heads/branchname` strings. `master` branches show up like this: `refs/heads/master`.
+
 
 #### Notes
 
-The shell's standard input fetches the payload of the webhook request. That's usually a JSON object with
+The shell's standard input fetches the payload of the webhook request. That's ordinarily a stringified JSON object with
 details of the action that triggered the webhook. It's not always necessary to handle that data. But, if you
 do handle it, [Stephen Dolan's](http://stedolan.net/about/) [jq command line utility](https://stedolan.github.io/jq/) can help.
+
+The payload doesn't have a standard format: it's different on github and gitlab, for example.
 
 The shell is spawned under the same user that runs this program. That user must, of course, have access 
 to system resources necessary to handle the request. If it's going to fetch the contents of a git
@@ -70,7 +75,7 @@ repository, it also must have the appropriate `ssh` credentials.  Duh.
 ````
 #!/bin/sh
 TODO
-if $1 == 'git@github.com/olliejones/git-webhook-responder' & $2 == 'push' & $3 == 'production' then
+if $1 == 'git@github.com/olliejones/git-webhook-responder' & $2 == 'push' & $3 == '/refs/heads/production' then
    pm2 deploy program staging
 else
    logger on-webhook "Mismatched parameters $1 $2 $3"

@@ -17,6 +17,6 @@ A JSON object as a payload. For example see `gitlab1.json`.
 
 Here's a test command in CURL
 ```
-curl -X POST  -H "X-GITLAB-EVENT:Push Hook" -H "X-GITLAB-TOKEN:SecretToken" -H "Content-Type:application/json" -d @gitlab1.json https://video.myglance.org:3100/
+curl -X POST  -H "X-GITLAB-EVENT:Push Hook" -H "X-GITLAB-TOKEN:SecretToken" -H "Content-Type:application/json" -d @gitlab1.json https://video.myglance.org:3100/webhook
 ```
 

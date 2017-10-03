@@ -283,6 +283,5 @@ paket-files/
 # git files for merge conflict resolution.
 **/*.orig
 
-# Unix backup files
-*~
 
+!/bin/www

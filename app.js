@@ -49,8 +49,20 @@ app.use( morgan(
       }
     } ) );
 
-app.use( bodyParser.json() );
+
 app.use( bodyParser.urlencoded( {extended: false} ) );
+/* parse to raw and then to JSON so we can do HMAC correctly on github body data */
+//app.use( bodyParser.json() );
+app.use( bodyParser.raw( {type: '*/*'} ) );
+app.use( function( req, res, next ) {
+  try {
+    req.bodyJSON = JSON.parse( req.body );
+  }
+  catch( exception ) {
+    if( req.bodyJSON ) delete req.bodyJSON;
+  }
+  next();
+} );
 app.use( cookieParser() );
 app.use( lessMiddleware( path.join( __dirname, 'public' ) ) );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
