@@ -42,12 +42,18 @@ to make sure it does what you want done.
 
 #### Synopsis
 
-    on-webhook repository action branch  
+    on-webhook repository repopath reponame action branch  
 
 #### Parameters
 
     repository
 The repository's URL. For example `git@github.com/olliejones/git-webhook-responder`
+
+    repopath
+The repository's name, including namespace. For example `olliejones/git-webhook-responder`
+
+    reponame
+The repository's leaf name. For example `git-webhook-responder`
 
     action
 The action triggering the webhook.  `push`, `merge`, etc.
@@ -60,25 +66,36 @@ are [fully qualified git references](https://git-scm.com/book/en/v2/Git-Internal
 
 #### Notes
 
-The shell's standard input fetches the payload of the webhook request. That's ordinarily a stringified JSON object with
+The shell's standard input contains the payload of the webhook request. That's ordinarily a stringified JSON object with
 details of the action that triggered the webhook. It's not always necessary to handle that data. But, if you
 do handle it, [Stephen Dolan's](http://stedolan.net/about/) [jq command line utility](https://stedolan.github.io/jq/) can help.
 
-The payload doesn't have a standard format: it's different on github and gitlab, for example.
+The payload doesn't have an industry-standard format: it's different on github and gitlab, for example.
 
 The shell is spawned under the same user that runs this program. That user must, of course, have access 
 to system resources necessary to handle the request. If it's going to fetch the contents of a git
-repository, it also must have the appropriate `ssh` credentials.  Duh.
+repository, it also must have any required `ssh` credentials. 
 
 #### Example
 
 ````
 #!/bin/sh
-TODO
-if $1 == 'git@github.com/olliejones/git-webhook-responder' & $2 == 'push' & $3 == '/refs/heads/production' then
-   pm2 deploy program staging
+
+# Synopsis
+#    on-webhook repository repopath reponame action branch
+
+repository=$1
+repopath=$2
+reponame=$3
+action=$4
+branch=$5
+
+if [ "$repopath" == "joeuser/project" ] &&  [ "$action" == "push" ] && [ "$branch" == "refs/heads/master" ]; then
+    logger "$0 deploying $repository"
+    cd ~/$reponame
+    pm2 deploy development
 else
-   logger on-webhook "Mismatched parameters $1 $2 $3"
+    logger "$0 mismatch! not deploying $repository"
 fi
 ````
 
