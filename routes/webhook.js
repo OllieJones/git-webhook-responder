@@ -9,26 +9,49 @@ router.post( '/', function( req, res, next ) {
 
   var status;
   var output;
-    if( req.description && req.description.ok ) {
-	/* here's where we do something useful */
+  if( req.description && req.description.ok ) {
 
-	const myShell = spawn ('on-webhook', [req.description.git_ssh_url,
-					      req.description.reponame,
-					      req.description.event_name,
-					      req.description.ref ]);
+    try {
+      /* here's where we do something useful */
+      var stdout_val = [];
+      var stderr_val = [];
 
-	myShell.stdout.on('data', function(data) {
-	    console.log ('stdout from shell', data.toString('utf8'));
-	});
-	myShell.stderr.on('data', function(data) {
-	    console.log ('stderr from shell', data.toString('utf8'));
-	});
-        myShell.on('close', function(code){
-             console.log ('shell ended with code', code);
-        });
-	myShell.stdin.write(JSON.stringify(req.description.payload));
+      const myShell = spawn( req.description.on_webhook,
+                             [req.description.git_ssh_url,
+                              req.description.repopath,
+                              req.description.reponame,
+                              req.description.event_name,
+                              req.description.ref] );
 
-	
+      /* send the payload to the spawned shell */
+      myShell.stdin.write( JSON.stringify( req.description.payload ) );
+
+      /* gather the results of the spawned shell */
+      myShell.stdout.on( 'data', function( data ) {
+        stdout_val.push( data.toString( 'utf8' ) );
+      } );
+      myShell.stderr.on( 'data', function( data ) {
+        stderr_val.push( data.toString( 'utf8' ) );
+      } );
+
+      /* log the results of the spawned shell */
+      myShell.on( 'close', function( code ) {
+        var severity = (code === 0) ? 'notice' : 'warning';
+        if( code !== 0 ) req.logger( severity, req.description.on_webhook + ' exited with ' + code );
+        var output = stdout_val.join( '' ).replace( /\s*$/, '' );
+        if( output.length >= 0 ) {
+          req.logger( severity, req.description.on_webhook + ' stdout: ' + output );
+        }
+        output = stderr_val.join( '' ).replace( /\s*$/, '' );
+        if( output.length >= 0 ) {
+          req.logger( severity, req.description.on_webhook + ' stderr: ' + output );
+        }
+      } );
+    }
+    catch( exception ) {
+      req.logger.error( 'error trying to spawn command' );
+    }
+
     status = 200;
     if( req.query.describe ) {
       req.description.status  = status;
