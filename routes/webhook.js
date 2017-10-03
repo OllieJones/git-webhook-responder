@@ -37,14 +37,14 @@ router.post( '/', function( req, res, next ) {
       /* log the results of the spawned shell */
       myShell.on( 'close', function( code ) {
         var severity = (code === 0) ? 'notice' : 'warning';
-        if( code !== 0 ) req.logger( severity, req.description.on_webhook + ' exited with ' + code );
+        if( code !== 0 ) req.logger.log( severity, req.description.on_webhook + ' exited with ' + code );
         var output = stdout_val.join( '' ).replace( /\s*$/, '' );
         if( output.length >= 0 ) {
-          req.logger( severity, req.description.on_webhook + ' stdout: ' + output );
+          req.logger.log( severity, req.description.on_webhook + ' stdout: ' + output );
         }
         output = stderr_val.join( '' ).replace( /\s*$/, '' );
         if( output.length >= 0 ) {
-          req.logger( severity, req.description.on_webhook + ' stderr: ' + output );
+          req.logger.log( severity, req.description.on_webhook + ' stderr: ' + output );
         }
       } );
     }
