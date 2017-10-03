@@ -39,11 +39,11 @@ router.post( '/', function( req, res, next ) {
         var severity = (code === 0) ? 'notice' : 'warning';
         if( code !== 0 ) req.logger.log( severity, req.description.on_webhook + ' exited with ' + code );
         var output = stdout_val.join( '' ).replace( /\s*$/, '' );
-        if( output.length >= 0 ) {
+        if( output.length > 0 ) {
           req.logger.log( severity, req.description.on_webhook + ' stdout: ' + output );
         }
         output = stderr_val.join( '' ).replace( /\s*$/, '' );
-        if( output.length >= 0 ) {
+        if( output.length > 0 ) {
           req.logger.log( severity, req.description.on_webhook + ' stderr: ' + output );
         }
       } );
