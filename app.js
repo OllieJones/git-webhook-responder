@@ -6,8 +6,6 @@ const properties = require( 'properties' );
 var settings        = config.get( 'webhook' );
 global.serverConfig = settings.ServerConfig;
 
-console.log( JSON.stringify( settings, null, 2 ) );
-
 var express          = require( 'express' );
 var path             = require( 'path' );
 var favicon          = require( 'serve-favicon' );

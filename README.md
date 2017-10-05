@@ -100,10 +100,11 @@ Explanation of `sample.json`:
 
 ### Action
 
-The program then spawns a shell and runs the command `on-webhook` (or the comm. That shell script or 
-program does what you want it to do.  A good way to deploy the command is to put in `~/bin/` and make it executable.
+The program then spawns a shell and runs the command `on-webhook` (or the command you specified in your configuration stanza
+ for the particular repo.) You can write that shell script or 
+program to do what you want it to do.  A good way to deploy it on your server is to put in `~/bin/` and make it executable.
 
-`on-webhook` has parameters describing the webhook. When you write it, **you must check the parameters** 
+`on-webhook` is invoked with parameters describing the webhook. When you write it, **you must check the parameters** 
 to make sure it does what you want done.
 
 
