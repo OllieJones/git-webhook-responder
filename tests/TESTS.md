@@ -22,12 +22,12 @@ curl -X POST  -H "X-GITLAB-EVENT:Push Hook" -H "X-GITLAB-TOKEN:SecretToken" -H "
 
 ## github
 
-    X-Hub-Signature: sha1=1ec36f98afc99d190a0a01922041365b1f7fe876
+    X-Hub-Signature: sha1=a6a2fee52f54eba8bfaafe8c1a7a36d8fa96b82e
 
 Payload in github1.json
 
 Here's a test command in CURL
 ```
-curl -X POST  -H "X-Hub-Signature:sha1=1ec36f98afc99d190a0a01922041365b1f7fe876" -H "Content-Type:application/json" -d @github1.json https://video.myglance.org:3100/webhook
+curl -X POST  -H "X-Hub-Signature:sha1=a6a2fee52f54eba8bfaafe8c1a7a36d8fa96b82e" -H "Content-Type:application/json" -d @github1.json https://video.myglance.org:3100/webhook
 ```
 
