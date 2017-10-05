@@ -1,0 +1,22 @@
+{
+  "gitlab": {
+    "1": {
+      "repopath": "joeuser/project",
+      "ref": "refs/heads/master",
+      "secret": "SecretToken"
+    },
+    "2": {
+      "repopath": "joeuser/bigdeal",
+      "ref": "refs/heads/master",
+      "secret": "DontTellMom",
+      "on_webhook": "myCommand.sh"
+    }
+  },
+  "github": {
+    "1": {
+      "repopath": "JoeUser/open-source-magnum-opus",
+      "ref": "refs/heads/master",
+      "secret": "deadbeef01234567890abcdefbeefdead"
+    }
+  }
+}
