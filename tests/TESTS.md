@@ -31,3 +31,4 @@ Here's a test command in CURL
 curl -X POST  -H "X-Hub-Signature:sha1=a6a2fee52f54eba8bfaafe8c1a7a36d8fa96b82e" -H "Content-Type:application/json" -d @github1.json https://video.myglance.org:3100/webhook
 ```
 
+Note you can append ?describe=1 to the URLs to get verbose results.
