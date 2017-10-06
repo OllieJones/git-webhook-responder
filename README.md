@@ -145,8 +145,12 @@ do handle it, [Stephen Dolan's](http://stedolan.net/about/) [jq command line uti
 The payload doesn't have an industry-standard format: it's different on github and gitlab, for example.
 
 The shell is spawned under the same user that runs this program. That user must, of course, have access 
-to system resources necessary to handle the request. If it's going to fetch the contents of a git
-repository, it also must have any required `ssh` credentials. 
+to system resources necessary to handle the request. 
+
+If it's going to fetch the contents of a git
+repository, it also must have any required `ssh` credentials.  In this example, those credentials are
+located in `.ssh/id_gitlab`. It's a good idea to set up your git server to honor credentials like that only for fetching and cloning,
+not for pushing changes.
 
 #### Example
 
@@ -165,6 +169,7 @@ branch=$5
 if [ "$repopath" == "joeuser/project" ] &&  [ "$action" == "push" ] && [ "$branch" == "refs/heads/master" ]; then
     logger "$0 deploying $repository"
     cd ~/$reponame
+    ssh-agent sh -c 'ssh-add ~/.ssh/id_gitlab; pm2 deploy development >/tmp/on-webhook-output'
     pm2 deploy development
 else
     logger "$0 mismatch! not deploying $repository"
