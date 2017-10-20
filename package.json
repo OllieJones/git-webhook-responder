@@ -12,6 +12,8 @@
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-ip-access-control": "^1.0.5",
+    "express-rate-limit": "^2.9.0",
+    "helmet": "^3.9.0",
     "http": "0.0.0",
     "https": "^1.0.0",
     "less-middleware": "~2.2.1",

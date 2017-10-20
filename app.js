@@ -6,9 +6,12 @@ const properties = require( 'properties' );
 var settings        = config.get( 'webhook' );
 global.serverConfig = settings.ServerConfig;
 
-var express          = require( 'express' );
-var path             = require( 'path' );
-var favicon          = require( 'serve-favicon' );
+var express     = require( 'express' );
+var path        = require( 'path' );
+var favicon     = require( 'serve-favicon' );
+const helmet    = require( 'helmet' );
+const RateLimit = require( 'express-rate-limit' );
+
 var logger           = require( './lib/logger' )( settings );
 global.logger        = logger;
 var morgan           = require( 'morgan' );
@@ -23,6 +26,21 @@ var app = express();
 app.disable( 'x-powered-by' );
 /* trust a local reverse proxy like nginx, to get originating addresses */
 app.set( 'trust proxy', 'loopback' );
+app.use( helmet() );
+
+var limiter = new RateLimit(
+    {
+      windowMs:       1000 * (config.rateLimitTimeWindow || 60),
+      max:            config.rateLimitMax || 6, // limit each IP to 6 requests per time window
+      delayMs:        1, // delay an extra ms for each repeated request
+      headers:        true,  // send explanatory headers back to client
+      onLimitReached: function onLimitReached( req, res, options ) {
+        logger.warning( 'Request rate limited for requests from ', req.ip );
+      }
+    } );
+
+//  apply to all requests
+app.use( limiter );
 
 // view engine setup
 app.set( 'views', path.join( __dirname, 'views' ) );
@@ -48,7 +66,6 @@ app.use( morgan(
         }
       }
     } ) );
-
 
 app.use( bodyParser.urlencoded( {extended: false} ) );
 /* parse to raw and then to JSON so we can do HMAC correctly on github body data */
