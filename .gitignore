@@ -284,4 +284,4 @@ paket-files/
 **/*.orig
 
 
-!/bin/www
+!/bin/git-webhook-responder
